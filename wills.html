@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>وصايا — وصيتي</title>
+  <link rel="icon" href="./assets/logo.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="./assets/styles.css" />
+</head>
+<body class="theme-light" data-page="wills">
+  <header class="app-header">
+    <div class="header-side right"><img id="siteLogo" src="./assets/logo.svg" class="header-logo" alt="Logo" /></div>
+    <div class="header-center">
+      <button id="upgradeBtn" class="upgrade-btn" type="button">⬆ ترقية</button>
+      <span id="planBadge" class="plan-badge hidden"></span>
+    </div>
+    <div class="header-side left"><button class="icon-btn theme-toggle" id="themeToggle" title="تبديل الوضع">🌙</button><button class="icon-btn" id="profileBtn">👤</button></div>
+  </header>
+
+  <main class="container">
+    <h2 class="view-title">وصيتي</h2>
+    <form id="form-will" class="form card">
+      <label>عنوان الوصية</label>
+      <input type="text" id="will-title" placeholder="اكتب العنوان" required />
+      <label>موضوع الوصية</label>
+      <textarea id="will-body" rows="5" placeholder="نص الوصية..." required></textarea>
+      <button type="submit" class="btn primary">حفظ الوصية</button>
+    </form>
+
+    <div id="wills-list" class="v-cards"></div>
+  </main>
+
+  <!-- حوار الوصية -->
+  <dialog id="will-dialog" class="dlg">
+    <article class="dlg-card">
+      <h3 id="dlg-will-title"></h3>
+      <div id="dlg-will-body" class="dlg-body"></div>
+      <div class="row space" style="margin-top:10px">
+        <button id="dlg-edit-will" class="btn">تعديل</button>
+        <button id="dlg-del-will" class="btn danger">حذف</button>
+        <button id="dlg-close-will" class="btn ghost">إغلاق</button>
+      </div>
+    </article>
+  </dialog>
+
+  <nav class="tabbar" id="tabbar">
+    <a class="tab" href="./index.html">الرئيسية</a>
+    <a class="tab" href="./debt-on-me.html">دين علي</a>
+    <a class="tab" href="./debt-to-me.html">دين لي</a>
+    <a class="tab active" href="./wills.html">وصيتي</a>
+    <a class="tab" href="./more.html">المزيد</a>
+  </nav>
+
+  <script src="./js/app.js" defer></script>
+</body>
+</html>

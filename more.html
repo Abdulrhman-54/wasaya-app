@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>وصايا — المزيد</title>
+  <link rel="icon" href="./assets/logo.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="./assets/styles.css" />
+</head>
+<body class="theme-light" data-page="more">
+  <header class="app-header">
+    <div class="header-side right"><img src="./assets/logo.svg" class="header-logo" alt="Logo" id="siteLogo"/></div>
+    <div class="header-center">
+      <button id="upgradeBtn" class="upgrade-btn" type="button">⬆ ترقية</button>
+      <span id="planBadge" class="plan-badge hidden"></span>
+    </div>
+    <div class="header-side left"><button class="icon-btn theme-toggle" id="themeToggle" title="تبديل الوضع">🌙</button><button class="icon-btn" id="profileBtn">👤</button></div>
+  </header>
+
+  <main class="container">
+    <h2 class="view-title">المزيد</h2>
+
+    <div class="card">
+      <h3>التنبيهات</h3>
+      <label class="switch-row"><input type="checkbox" id="alert-wills" /><span>تذكير تحديث الوصية</span></label>
+      <label class="switch-row"><input type="checkbox" id="alert-debts" /><span>تنبيهات الديون (دين لي / دين علي)</span></label>
+    </div>
+
+    <div class="card">
+      <h3>روابط مهمة</h3>
+      <div class="links">
+        <a href="#" id="academy">أكاديمية وصايا</a>
+        <a href="#" id="privacy">سياسة الخصوصية</a>
+        <a href="#" id="faq">الأسئلة الشائعة</a>
+        <a href="#" id="contact">تواصل معنا</a>
+        <a href="#" id="export-data">تصدير البيانات (JSON)</a>
+      </div>
+    </div>
+
+    <!-- قسم الدفع ووسائل الدفع (إضافة فقط) -->
+    <div class="card pay-card">
+      <h3>خيارات الدفع</h3>
+      <div class="pay-actions">
+        <a id="payTamara" class="btn primary" href="#" target="_blank" rel="noopener">دفع تمارا</a>
+        <a id="payTabby"  class="btn accent"  href="#" target="_blank" rel="noopener">دفع تابي</a>
+      </div>
+    </div>
+
+    <!-- تذييل وسائل الدفع والشهادات -->
+    <div class="card">
+      <h4>وسائل الدفع المدعومة</h4>
+      <div id="payIcons" class="pay-strip"></div>
+      <div class="split"></div>
+      <h4>شعارات الامتثال</h4>
+      <div id="compIcons" class="pay-strip"></div>
+    </div>
+  </main>
+
+  <nav class="tabbar" id="tabbar">
+    <a class="tab" href="./index.html">الرئيسية</a>
+    <a class="tab" href="./debt-on-me.html">دين علي</a>
+    <a class="tab" href="./debt-to-me.html">دين لي</a>
+    <a class="tab" href="./wills.html">وصيتي</a>
+    <a class="tab active" href="./more.html">المزيد</a>
+  </nav>
+
+  <!-- حوار موحد لعرض النصوص/الفيديوهات -->
+  <dialog id="contentDialog" class="dlg">
+    <article class="dlg-card">
+      <h3 id="contentTitle"></h3>
+      <div id="contentBody" class="dlg-body"></div>
+      <div class="row space"><button id="contentClose" class="btn ghost">إغلاق</button></div>
+    </article>
+  </dialog>
+
+  <script src="./js/app.js" defer></script>
+</body>
+</html>

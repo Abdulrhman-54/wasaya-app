@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>وصايا — دين علي</title>
+  <link rel="icon" href="./assets/logo.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="./assets/styles.css" />
+</head>
+<body class="theme-light" data-page="dom">
+  <header class="app-header">
+    <div class="header-side right"><img id="siteLogo" src="./assets/logo.svg" class="header-logo" alt="Logo" /></div>
+    <div class="header-center">
+      <button id="upgradeBtn" class="upgrade-btn" type="button">⬆ ترقية</button>
+      <span id="planBadge" class="plan-badge hidden"></span>
+    </div>
+    <div class="header-side left"><button class="icon-btn theme-toggle" id="themeToggle" title="تبديل الوضع">🌙</button><button class="icon-btn" id="profileBtn">👤</button></div>
+  </header>
+
+  <main class="container">
+    <h2 class="view-title">دين علي</h2>
+    <form id="form-debt-on-me" class="form card">
+      <label>اسم صاحب الدين</label>
+      <input type="text" id="dom-name" placeholder="الاسم" required />
+
+      <label>رقم جواله</label>
+      <input type="tel" id="dom-phone" inputmode="numeric" placeholder="05xxxxxxxx" required />
+
+      <label>المبلغ</label>
+      <input type="number" id="dom-amount" min="0" step="0.01" placeholder="مثال: 1500" required />
+
+      <label>مستندات (اختياري)</label>
+      <input type="file" id="dom-files" multiple accept="image/*,.pdf" />
+
+      <button type="submit" class="btn primary">حفظ الدين</button>
+    </form>
+
+    <div id="dom-list" class="cards"></div>
+  </main>
+
+  <!-- حوار عرض الدين + السداد -->
+  <dialog id="debt-dialog" class="dlg">
+    <article class="dlg-card">
+      <h3 id="dlg-debt-title"></h3>
+      <div id="dlg-debt-meta" class="muted" style="margin:.4rem 0"></div>
+      <div id="dlg-debt-body" class="dlg-body"></div>
+      <div class="row space" style="margin-top:10px">
+        <button id="dlg-edit-debt" class="btn">تعديل</button>
+        <button id="dlg-del-debt" class="btn danger">حذف</button>
+        <button id="dlg-close-debt" class="btn ghost">إغلاق</button>
+      </div>
+    </article>
+  </dialog>
+
+  <nav class="tabbar" id="tabbar">
+    <a class="tab" href="./index.html">الرئيسية</a>
+    <a class="tab active" href="./debt-on-me.html">دين علي</a>
+    <a class="tab" href="./debt-to-me.html">دين لي</a>
+    <a class="tab" href="./wills.html">وصيتي</a>
+    <a class="tab" href="./more.html">المزيد</a>
+  </nav>
+
+  <script src="./js/app.js" defer></script>
+</body>
+</html>

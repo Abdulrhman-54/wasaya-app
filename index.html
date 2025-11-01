@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <meta name="theme-color" content="#0f172a" />
+  <title>وصايا — إدارة الوصايا والديون</title>
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" href="./assets/logo.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="./assets/styles.css" />
+</head>
+<body class="theme-light" data-page="home">
+  <!-- الهيدر -->
+  <header class="app-header">
+    <div class="header-side right">
+      <img id="siteLogo" src="./assets/logo.svg" class="header-logo" alt="Logo" />
+    </div>
+    <div class="header-center">
+      <button id="upgradeBtn" class="upgrade-btn" type="button">⬆ ترقية</button>
+      <span id="planBadge" class="plan-badge hidden"></span>
+    </div>
+    <div class="header-side left">
+      <button class="icon-btn theme-toggle" id="themeToggle" title="تبديل الوضع">🌙</button>
+      <button class="icon-btn" id="profileBtn" aria-label="الملف الشخصي">👤</button>
+    </div>
+  </header>
+
+  <!-- الصفحة الرئيسية -->
+  <main class="container">
+    <section class="view active" id="home">
+      <div class="banner">
+        <div class="banner-text">
+          <h2 id="heroTitle">كل وصاياك وديونك<br/>في مكان واحد</h2>
+          <p id="heroSub" class="muted">صُمّم ليعمل بأناقة على الجوال أولًا.</p>
+
+          <!-- اختياري: مكان السلايدر داخل البانر (مفعّل الآن) -->
+          <div id="heroSlider"></div>
+        </div>
+      </div>
+
+      <!-- زران شبه متلاصقين مع وميض -->
+      <div class="home-actions">
+        <div class="home-actions-left">
+          <button class="btn accent pulse" id="quick-add-will">+ إضافة وصية</button>
+        </div>
+        <div class="home-actions-right" style="position:relative">
+          <button class="btn pulse" id="debtToggle">+ إضافة دين</button>
+          <!-- القائمة المنسدلة لاختيار نوع الدين -->
+          <div class="debt-menu" id="debtMenu">
+            <button class="btn full" id="quick-debt-to-me">دين لي</button>
+            <button class="btn full" id="quick-debt-on-me" style="margin-top:6px">دين علي</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- mini stats (إضافة فقط) -->
+      <div class="mini-stats card">
+        <div class="mini-item">
+          <div class="k">دين علي</div>
+          <div id="statDom" class="v">0</div>
+        </div>
+        <div class="mini-item">
+          <div class="k">دين لي</div>
+          <div id="statDtm" class="v">0</div>
+        </div>
+        <div class="mini-item">
+          <div class="k">وصاياي</div>
+          <div id="statWills" class="v">0</div>
+        </div>
+      </div>
+
+      <script>
+        (function () {
+          const u = localStorage.getItem('wasaya:lastUser');
+          if (!u) return;
+          const g = (k) => JSON.parse(localStorage.getItem(`wasaya:${u}:${k}`) || '[]');
+          document.getElementById('statDom').textContent   = g('dom').length;
+          document.getElementById('statDtm').textContent   = g('dtm').length;
+          document.getElementById('statWills').textContent = g('wills').length;
+        })();
+      </script>
+
+    </section>
+  </main>
+
+  <!-- تبويبات سفلية (روابط صفحات) -->
+  <nav class="tabbar" id="tabbar">
+    <a class="tab active" href="./index.html">الرئيسية</a>
+    <a class="tab" href="./debt-on-me.html">دين علي</a>
+    <a class="tab" href="./debt-to-me.html">دين لي</a>
+    <a class="tab" href="./wills.html">وصيتي</a>
+    <a class="tab" href="./more.html">المزيد</a>
+  </nav>
+
+  <script src="./js/app.js" defer></script>
+</body>
+</html>

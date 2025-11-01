@@ -1,0 +1,13 @@
+{
+  "name": "Wasaya — وصايا",
+  "short_name": "وصايا",
+  "start_url": ".",
+  "display": "standalone",
+  "dir": "rtl",
+  "lang": "ar",
+  "background_color": "#0b1220",
+  "theme_color": "#0f172a",
+  "icons": [
+    { "src": "./assets/logo.svg", "sizes": "64x64", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

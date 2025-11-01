@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>وصايا — الترقية</title>
+  <link rel="icon" href="./assets/logo.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="./assets/styles.css" />
+</head>
+<body class="theme-light" data-page="pay">
+  <header class="app-header">
+    <div class="header-side right"><img src="./assets/logo.svg" class="header-logo" alt="Logo" id="siteLogo"/></div>
+    <div class="header-center"><span class="upgrade-btn">اختر خطة</span><span id="planBadge" class="plan-badge hidden"></span></div>
+    <div class="header-side left"><button class="icon-btn theme-toggle" id="themeToggle" title="تبديل الوضع">🌙</button></div>
+  </header>
+
+  <main class="container">
+    <h2 class="view-title">الترقية</h2>
+    <div class="plans">
+      <article class="plan-card pulse" data-plan="monthly" data-label="شهري" data-price="49">
+        <div class="plan-title">الخطة الشهرية</div>
+        <div class="plan-price">49 ر.س / شهر</div>
+        <ul class="plan-feats">
+          <li>كل المميزات الأساسية</li>
+          <li>دعم عبر البريد</li>
+        </ul>
+        <div class="plan-cta"><button class="btn subscribe-btn">اشترك</button></div>
+      </article>
+
+      <article class="plan-card" data-plan="yearly" data-label="سنوي" data-price="199">
+        <div class="plan-title">الخطة السنوية</div>
+        <div class="plan-price">199 ر.س / سنة</div>
+        <ul class="plan-feats">
+          <li>توفير كبير</li>
+          <li>دعم أولوي</li>
+        </ul>
+        <div class="plan-cta"><button class="btn subscribe-btn">اشترك</button></div>
+      </article>
+
+      <article class="plan-card featured pulse" data-plan="lifetime" data-label="مدى الحياة" data-price="499">
+        <div class="plan-title">مدى الحياة</div>
+        <div class="plan-price">499 ر.س لمرة واحدة</div>
+        <ul class="plan-feats">
+          <li>دفع لمرة واحدة</li>
+          <li>تحديثات مستمرة</li>
+        </ul>
+        <div class="plan-cta"><button class="btn subscribe-btn">اشترك</button></div>
+      </article>
+    </div>
+  </main>
+
+  <nav class="tabbar" id="tabbar">
+    <a class="tab" href="./index.html">الرئيسية</a>
+    <a class="tab" href="./debt-on-me.html">دين علي</a>
+    <a class="tab" href="./debt-to-me.html">دين لي</a>
+    <a class="tab" href="./wills.html">وصيتي</a>
+    <a class="tab" href="./more.html">المزيد</a>
+  </nav>
+
+  <script src="./js/app.js" defer></script>
+</body>
+</html>
