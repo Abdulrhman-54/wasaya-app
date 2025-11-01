@@ -123,7 +123,7 @@ body.theme-light .plan-card{background:#ffffff; border-color:rgba(15,23,42,.12)}
 .plan-cta .btn{
   min-width:160px;
   background: var(--primary);
-  color:#052e16;            /* تباين واضح على الأخضر */
+  color:#052e16;
   border:0;
 }
 .plan-cta .btn:hover{filter:brightness(1.05)}
@@ -137,7 +137,7 @@ body.theme-light .plan-card{background:#ffffff; border-color:rgba(15,23,42,.12)}
   font-weight:700;
   background: rgba(148,163,184,.15);
   border:1px solid rgba(148,163,184,.35);
-  color: var(--text);                   /* أبيض في الداكن، داكن في الفاتح تلقائيًا */
+  color: var(--text);
 }
 body.theme-light .link-like{
   background: rgba(15,23,42,.08);
@@ -149,80 +149,68 @@ body.theme-light .link-like{
 
 /* خلفيات البطاقات تتبع وضع الموقع (فاتح/داكن) */
 .bankcard{
-  /* قاعدة محايدة تلتقط قيمة --card من الثيم */
   background: var(--card);
   border: 1px solid rgba(148,163,184,.18);
   transition: background .2s ease, border-color .2s ease;
 }
-
-/* مظهر البطاقة الأصلي (متدرج جميل) في الوضع الداكن فقط */
 body.theme-dark .bankcard{
   background: linear-gradient(135deg,#0b1325,#0f1a32);
   border-color: rgba(148,163,184,.18);
 }
-
-/* في الوضع الفاتح تصبح البطاقة فاتحة ومتباينة */
 body.theme-light .bankcard{
   background: #ffffff;
   border-color: rgba(15,23,42,.12);
 }
-
-/* شارة النوع داخل البطاقة: تباين مناسب في الفاتح */
-body.theme-light .bankcard .type{
-  background: rgba(15,23,42,.08);
-}
-
-/* عناصر السداد داخل تفاصيل الدين: تباين مناسب في الفاتح */
-body.theme-light .sadaad-item{
-  background: rgba(15,23,42,.06);
-}
+body.theme-light .bankcard .type{ background: rgba(15,23,42,.08); }
+body.theme-light .sadaad-item{ background: rgba(15,23,42,.06); }
 
 /* 1) توحيد لون نصوص السلايدر والعناوين داخل البانر إلى الأبيض دائمًا */
 .banner-text #heroTitle,
 .banner-text #heroSub,
 .banner-text #heroSlider,
-.banner-text #heroSlider *{
-  color:#fff !important;
-}
+.banner-text #heroSlider *{ color:#fff !important; }
 
-/* 2) تباين نص الأزرار الرئيسية وزرَّي القائمة المنسدلة (دين لي / دين علي) */
-.btn:not(.primary):not(.accent):not(.ghost):not(.danger){
-  color:#fff;        /* يعمل مع زر "إضافة دين" وأزرار debt-menu */
-}
+/* 2) تباين نص الأزرار الافتراضية */
+.btn:not(.primary):not(.accent):not(.ghost):not(.danger){ color:#fff; }
 
-/* ===== mini stats (إضافة فقط) ===== */
+/* ===== mini stats ===== */
 .mini-stats{display:grid; grid-template-columns:repeat(3,1fr); gap:8px}
 .mini-item{
   background:rgba(148,163,184,.08);
   border:1px solid rgba(148,163,184,.15);
   border-radius:12px;
-  padding:10px;
-  text-align:center;
+  padding:10px; text-align:center;
 }
 .mini-item .k{font-size:.82rem; opacity:.9}
 .mini-item .v{font-weight:800; font-size:1.2rem; margin-top:4px}
-
-/* تباين مناسب في الوضع الفاتح */
 body.theme-light .mini-item{
   background:rgba(15,23,42,.05);
   border-color:rgba(15,23,42,.12);
 }
 
-/* ===== دفع/تذييل (إضافة فقط) ===== */
+/* ===== دفع/تذييل ===== */
 .pay-card .pay-actions{display:flex; gap:8px; flex-wrap:wrap}
 .pay-strip{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
 .pay-strip img{height:22px; width:auto; display:block; filter:none}
 body.theme-dark .pay-strip img{filter:none}
 .split{height:1px; background:rgba(148,163,184,.15); margin:10px 0}
 
-/* === شارة تفعيل الملف الشخصي على زر 👤 بعد تسجيل الدخول === */
-.icon-btn{position:relative} /* لتمكين تموضع الشارة */
-.icon-btn.profile.active::after{
-  content:"";
-  position:absolute;
-  inset:6px auto auto 6px;   /* أعلى-يسار الزر */
-  width:8px; height:8px;
-  background:var(--primary);
-  border-radius:50%;
-  box-shadow:0 0 0 2px rgba(0,0,0,.35);
+/* ===== FAQ (Accordion) ===== */
+.faq-list{display:grid;gap:8px}
+.faq-item{
+  background:var(--card);
+  border:1px solid rgba(148,163,184,.15);
+  border-radius:12px;
+  padding:8px 10px;
 }
+.faq-item summary{
+  list-style:none;
+  cursor:pointer;
+  font-weight:800;
+  outline:0;
+  display:flex; align-items:center; gap:8px;
+}
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-item .chev{ transition:transform .2s ease; font-size:1rem; opacity:.9; }
+.faq-item[open] .chev{ transform:rotate(180deg) }
+.faq-answer{margin-top:8px; line-height:1.9; color:var(--text)}
