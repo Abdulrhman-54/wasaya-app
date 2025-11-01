@@ -1,0 +1,335 @@
+<!-- File: /admin/index.html -->
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>وصايا — لوحة المسؤول</title>
+  <link rel="icon" href="../assets/logo.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="../assets/styles.css" />
+  <style>
+    .guard{max-width:720px;margin:24px auto}
+    .full{width:100%}
+    .row-end{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    @media (max-width:560px){.grid-2{grid-template-columns:1fr}}
+    .preview-logo{max-width:120px;border-radius:10px;border:1px solid rgba(148,163,184,.25);padding:6px;background:rgba(148,163,184,.06)}
+    .hidden{display:none!important}
+    .table{width:100%; border-collapse:separate; border-spacing:0 8px}
+    .table td{background:var(--card); padding:10px; border-radius:10px}
+    .mini{font-size:.86rem}
+  </style>
+</head>
+<body class="theme-dark" data-page="admin">
+  <main class="container guard">
+    <h2>لوحة المسؤول</h2>
+
+    <!-- تسجيل الدخول -->
+    <div id="admin-login" class="card">
+      <p class="tiny muted">هذه الصفحة مستقلة عن واجهة المستخدم.</p>
+      <label for="admin-pass">كلمة دخول المسؤول</label>
+      <input type="password" id="admin-pass" placeholder="Wasaya@915" class="full" autofocus />
+      <button id="admin-enter" class="btn primary full" type="button">دخول</button>
+      <label class="switch-row" style="margin-top:8px"><input type="checkbox" id="remember-admin" /><span>تذكرني على هذا الجهاز</span></label>
+    </div>
+
+    <!-- منطقة الإدارة -->
+    <div id="admin-area" class="hidden">
+      <div class="row-end"><button id="admin-logout" class="btn ghost">تسجيل خروج</button></div>
+
+      <!-- الهيرو -->
+      <div class="card">
+        <h3>الهيرو (الصفحة الرئيسية)</h3>
+        <div class="grid-2">
+          <div><label>العنوان</label><input id="cfg-hero-title" class="full" placeholder="كل وصاياك وديونك في مكان واحد" /></div>
+          <div><label>العنوان الفرعي</label><input id="cfg-hero-sub" class="full" placeholder="صُمّم ليعمل بأناقة على الجوال أولًا" /></div>
+        </div>
+        <div class="row-end"><button id="save-hero" class="btn">حفظ</button></div>
+      </div>
+
+      <!-- السلايدر -->
+      <div class="card">
+        <h3>السلايدر (بطاقات الهيرو)</h3>
+        <div class="grid-2">
+          <div><label>عنوان البطاقة</label><input id="slide-title" class="full" placeholder="عنوان جذاب" /></div>
+          <div><label>عنوان فرعي</label><input id="slide-sub" class="full" placeholder="وصف قصير" /></div>
+        </div>
+        <div class="row-end"><button id="add-slide" class="btn">إضافة بطاقة</button></div>
+        <table class="table mini" id="slides-table"></table>
+      </div>
+
+      <!-- الأسئلة الشائعة -->
+      <div class="card">
+        <h3>الأسئلة الشائعة</h3>
+        <p class="tiny muted">أدخل JSON: [{"q":"سؤال","a":"جواب"}]</p>
+        <textarea id="cfg-faq" rows="6" class="full"></textarea>
+        <div class="row-end"><button id="save-faq" class="btn">حفظ</button></div>
+      </div>
+
+   <!-- بطاقة: وسائل الدفع والشهادات (تذييل "المزيد") -->
+<div class="card">
+  <h3>وسائل الدفع والشهادات (تذييل "المزيد")</h3>
+
+  <div class="form">
+    <label>رابط دفع تمارا</label>
+    <input type="url" id="tamaraLink" placeholder="https://your-tamara-checkout-link">
+
+    <label>رابط دفع تابي</label>
+    <input type="url" id="tabbyLink" placeholder="https://your-tabby-checkout-link">
+  </div>
+
+  <div class="form">
+    <h4>أيقونات وسائل الدفع</h4>
+    <input type="file" id="payIconsInput" multiple accept="image/*">
+    <div class="tiny muted">مثال: Visa, MasterCard, Mada, STC Pay, Apple Pay…</div>
+    <div id="payIconsPreview" class="admin-previews"></div>
+    <button id="addPayIcons" class="btn small">+ إضافة الأيقونات المختارة</button>
+  </div>
+
+  <div class="form">
+    <h4>شعارات الامتثال</h4>
+    <input type="file" id="compIconsInput" multiple accept="image/*">
+    <div class="tiny muted">مثال: شعار المركز السعودي للمعلومات، شعار شهادة الضريبة</div>
+    <div id="compIconsPreview" class="admin-previews"></div>
+    <button id="addCompIcons" class="btn small">+ إضافة الشعارات المختارة</button>
+  </div>
+
+  <div class="row-end">
+    <button id="savePayments" class="btn primary">حفظ وتفعيل</button>
+  </div>
+</div>
+
+<script>
+/* === إدارة وسائل الدفع/الشهادات (تخزين عام غير مرتبط بالمستخدم) === */
+(function(){
+  const KEY_PAY_LINKS = 'wasaya:admin:payLinks';
+  const KEY_PAY_ICONS = 'wasaya:admin:payIcons';
+  const KEY_COMP_ICONS = 'wasaya:admin:compIcons';
+
+  const tamaraLink = document.getElementById('tamaraLink');
+  const tabbyLink  = document.getElementById('tabbyLink');
+
+  const payIconsInput = document.getElementById('payIconsInput');
+  const compIconsInput = document.getElementById('compIconsInput');
+  const payIconsPreview = document.getElementById('payIconsPreview');
+  const compIconsPreview = document.getElementById('compIconsPreview');
+
+  let payIcons = JSON.parse(localStorage.getItem(KEY_PAY_ICONS) || '[]');
+  let compIcons = JSON.parse(localStorage.getItem(KEY_COMP_ICONS) || '[]');
+  let payLinks  = JSON.parse(localStorage.getItem(KEY_PAY_LINKS) || '{"tamara":"","tabby":""}');
+
+  function renderPreviews(){
+    payIconsPreview.innerHTML = payIcons.map((i,idx)=>`
+      <div class="prev"><img src="${i.data}" alt="${i.alt||i.name}"><button data-del="${idx}" data-type="pay" class="btn small ghost">حذف</button></div>
+    `).join('') || '<div class="tiny muted">لا توجد أيقونات حالياً.</div>';
+
+    compIconsPreview.innerHTML = compIcons.map((i,idx)=>`
+      <div class="prev"><img src="${i.data}" alt="${i.alt||i.name}"><button data-del="${idx}" data-type="comp" class="btn small ghost">حذف</button></div>
+    `).join('') || '<div class="tiny muted">لا توجد شعارات حالياً.</div>';
+
+    tamaraLink.value = payLinks.tamara || '';
+    tabbyLink.value  = payLinks.tabby  || '';
+  }
+
+  function filesToArr(input){
+    const files = Array.from(input.files||[]);
+    return Promise.all(files.map(f=> new Promise(res=>{
+      const r = new FileReader();
+      r.onload = ()=> res({name:f.name, data:r.result, alt:f.name.replace(/\.\w+$/,'')});
+      r.readAsDataURL(f);
+    })));
+  }
+
+  document.getElementById('addPayIcons').onclick = async ()=>{
+    const arr = await filesToArr(payIconsInput);
+    if(arr.length){ payIcons = payIcons.concat(arr); renderPreviews(); }
+    payIconsInput.value='';
+  };
+
+  document.getElementById('addCompIcons').onclick = async ()=>{
+    const arr = await filesToArr(compIconsInput);
+    if(arr.length){ compIcons = compIcons.concat(arr); renderPreviews(); }
+    compIconsInput.value='';
+  };
+
+  [payIconsPreview, compIconsPreview].forEach(box=>{
+    box.addEventListener('click', e=>{
+      const b = e.target.closest('button[data-del]');
+      if(!b) return;
+      const idx = +b.dataset.del;
+      const tp  = b.dataset.type;
+      if(tp==='pay'){ payIcons.splice(idx,1); }
+      else { compIcons.splice(idx,1); }
+      renderPreviews();
+    });
+  });
+
+  document.getElementById('savePayments').onclick = ()=>{
+    payLinks = { tamara: tamaraLink.value.trim(), tabby: tabbyLink.value.trim() };
+    localStorage.setItem(KEY_PAY_LINKS, JSON.stringify(payLinks));
+    localStorage.setItem(KEY_PAY_ICONS, JSON.stringify(payIcons));
+    localStorage.setItem(KEY_COMP_ICONS, JSON.stringify(compIcons));
+    alert('تم الحفظ والتفعيل. افتح تبويب "المزيد" في واجهة المستخدم لمشاهدة التغيير.');
+  };
+
+  renderPreviews();
+})();
+</script>
+
+<style>
+/* معاينات بسيطة داخل لوحة المسؤول */
+.admin-previews{display:flex; gap:8px; flex-wrap:wrap; margin-top:6px}
+.admin-previews .prev{display:flex; align-items:center; gap:6px; background:rgba(148,163,184,.08); border:1px solid rgba(148,163,184,.15); padding:6px; border-radius:10px}
+.admin-previews img{height:28px; width:auto; display:block}
+.row-end{display:flex; justify-content:flex-end}
+</style>
+
+
+      <!-- سياسة الخصوصية -->
+      <div class="card">
+        <h3>سياسة الخصوصية</h3>
+        <textarea id="cfg-privacy" rows="6" class="full"></textarea>
+        <div class="row-end"><button id="save-privacy" class="btn">حفظ</button></div>
+      </div>
+
+      <!-- تواصل معنا -->
+      <div class="card">
+        <h3>تواصل معنا</h3>
+        <textarea id="cfg-contact" rows="4" class="full"></textarea>
+        <div class="row-end"><button id="save-contact" class="btn">حفظ</button></div>
+      </div>
+
+      <!-- أكاديمية وصايا -->
+      <div class="card">
+        <h3>أكاديمية وصايا (قائمة فيديوهات)</h3>
+        <p class="tiny muted">أضف فيديوهات يوتيوب (رابط) أو ملف فيديو.</p>
+        <div class="grid-2">
+          <div><label>عنوان الفيديو</label><input id="ac-title" class="full" placeholder="مثال: جولة في التطبيق" /></div>
+          <div><label>رابط يوتيوب (اختياري)</label><input id="ac-yt" class="full" placeholder="https://youtu.be/..." /></div>
+        </div>
+        <div style="margin-top:8px"><input type="file" id="ac-file" accept="video/*" /></div>
+        <div class="row-end"><button id="add-ac" class="btn">إضافة فيديو</button></div>
+        <table class="table mini" id="ac-table"></table>
+      </div>
+
+      <!-- اللوجو -->
+      <div class="card">
+        <h3>رفع اللوجو</h3>
+        <input type="file" id="cfg-logo" accept="image/*" />
+        <div style="margin-top:10px"><img id="logo-preview" class="preview-logo hidden" alt="Logo Preview"/></div>
+        <div class="row-end"><button id="save-logo" class="btn">حفظ</button></div>
+      </div>
+
+      <!-- شكل التبويبات -->
+      <div class="card">
+        <h3>شكل التبويبات</h3>
+        <select id="cfg-tab-style" class="full">
+          <option value="">افتراضي</option>
+          <option value="style-pill">حواف كبسولة (Pill)</option>
+          <option value="style-underline">خط سفلي (Underline)</option>
+        </select>
+        <div class="row-end"><button id="save-tab-style" class="btn">حفظ</button></div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const PASS = 'Wasaya@915';
+    const ADMIN_KEY = 'wasaya:admin:session';
+    const SITE_KEY  = 'wasaya:site:config';
+    const $ = s => document.querySelector(s);
+    const uid = () => Math.random().toString(36).slice(2);
+    function jget(){ try{return JSON.parse(localStorage.getItem(SITE_KEY)||'{}');}catch(e){return {}} }
+    function jset(next){ const cur=jget(); localStorage.setItem(SITE_KEY, JSON.stringify(Object.assign(cur,next))); alert('تم الحفظ'); }
+    const readFile = f => new Promise(res=>{const r=new FileReader(); r.onload=()=>res(r.result); r.readAsDataURL(f);});
+
+    function openAdmin(){ $('#admin-login').classList.add('hidden'); $('#admin-area').classList.remove('hidden'); fill(); }
+    if(localStorage.getItem(ADMIN_KEY)==='ok'){ openAdmin(); }
+    $('#admin-enter').onclick=()=>{ if(($('#admin-pass').value||'').trim()===PASS){ if($('#remember-admin').checked) localStorage.setItem(ADMIN_KEY,'ok'); openAdmin(); } else alert('كلمة مرور غير صحيحة'); };
+    $('#admin-logout').onclick=()=>{ localStorage.removeItem(ADMIN_KEY); location.reload(); };
+
+    function fill(){
+      const c=jget();
+      $('#cfg-hero-title').value=c.heroTitle||''; $('#cfg-hero-sub').value=c.heroSub||'';
+      $('#cfg-faq').value=c.faq?JSON.stringify(c.faq,null,2):''; $('#cfg-privacy').value=c.privacy||''; $('#cfg-contact').value=c.contact||'';
+      if(c.logo){ $('#logo-preview').src=c.logo; $('#logo-preview').classList.remove('hidden'); }
+      $('#cfg-tab-style').value=c.tabStyle||'';
+      renderSlides(c.slides||[]); renderAcademy(c.academy||[]);
+    }
+
+    // Hero
+    $('#save-hero').onclick=()=> jset({heroTitle:$('#cfg-hero-title').value.trim(), heroSub:$('#cfg-hero-sub').value.trim()});
+
+    // FAQ/Privacy/Contact
+    $('#save-faq').onclick=()=>{ try{const v=JSON.parse($('#cfg-faq').value||'[]'); if(!Array.isArray(v)) throw 0; jset({faq:v});}catch{alert('صيغة JSON غير صحيحة');} };
+    $('#save-privacy').onclick=()=> jset({privacy:$('#cfg-privacy').value});
+    $('#save-contact').onclick=()=> jset({contact:$('#cfg-contact').value});
+
+    // Logo
+    $('#save-logo').onclick=async()=>{ const f=$('#cfg-logo').files?.[0]; if(!f) return alert('اختر ملفًا'); const data=await readFile(f); $('#logo-preview').src=data; $('#logo-preview').classList.remove('hidden'); jset({logo:data}); };
+
+    // Tabs style
+    $('#save-tab-style').onclick=()=> jset({tabStyle:$('#cfg-tab-style').value});
+
+    // Slides
+    function renderSlides(list){
+      const t=$('#slides-table');
+      t.innerHTML = list.length? list.map(s=>`
+        <tr data-id="${s.id}">
+          <td class="mini"><div><strong>${s.title||''}</strong></div><div class="muted">${s.sub||''}</div></td>
+          <td style="width:1%"><button class="btn small" data-act="edit">تعديل</button> <button class="btn small danger" data-act="del">حذف</button></td>
+        </tr>`).join('') : '<tr><td class="mini">لا توجد بطاقات بعد.</td></tr>';
+    }
+    $('#add-slide').onclick=()=>{
+      const title=$('#slide-title').value.trim(), sub=$('#slide-sub').value.trim();
+      if(!title) return alert('اكتب عنوان البطاقة');
+      const c=jget(); const slides=c.slides||[];
+      slides.push({id:uid(), title, sub});
+      jset({slides}); $('#slide-title').value=''; $('#slide-sub').value=''; renderSlides(slides);
+    };
+    $('#slides-table').onclick=(e)=>{
+      const btn=e.target.closest('button'); if(!btn) return;
+      const id=e.target.closest('tr').dataset.id; const c=jget(); const slides=c.slides||[];
+      const idx=slides.findIndex(x=>x.id===id); if(idx<0) return;
+      if(btn.dataset.act==='del'){ slides.splice(idx,1); jset({slides}); renderSlides(slides); }
+      if(btn.dataset.act==='edit'){
+        const cur=slides[idx]; const nt=prompt('العنوان', cur.title||''); if(nt===null) return;
+        const ns=prompt('العنوان الفرعي', cur.sub||''); if(ns===null) return;
+        slides[idx]={...cur, title:nt, sub:ns}; jset({slides}); renderSlides(slides);
+      }
+    };
+
+    // Academy
+    function renderAcademy(list){
+      const t=$('#ac-table');
+      t.innerHTML = list.length? list.map(v=>`
+        <tr data-id="${v.id}">
+          <td class="mini"><div><strong>${v.title||''}</strong></div><div class="muted">${v.type==='youtube'?'YouTube':'ملف فيديو'}</div></td>
+          <td style="width:1%"><button class="btn small" data-act="edit">تعديل</button> <button class="btn small danger" data-act="del">حذف</button></td>
+        </tr>`).join('') : '<tr><td class="mini">لا توجد فيديوهات بعد.</td></tr>';
+    }
+    $('#add-ac').onclick=async()=>{
+      const title=$('#ac-title').value.trim(); const link=($('#ac-yt').value||'').trim(); const file=$('#ac-file').files?.[0];
+      if(!title) return alert('اكتب عنوان الفيديو');
+      if(!link && !file) return alert('أدخل رابط يوتيوب أو اختر ملف فيديو');
+      const c=jget(); const list=c.academy||[];
+      let item={id:uid(), title};
+      if(link){ item.type='youtube'; item.url=link; }
+      else{ item.type='file'; item.url=await readFile(file); }
+      list.push(item); jset({academy:list}); $('#ac-title').value=''; $('#ac-yt').value=''; $('#ac-file').value=''; renderAcademy(list);
+    };
+    $('#ac-table').onclick=(e)=>{
+      const btn=e.target.closest('button'); if(!btn) return;
+      const id=e.target.closest('tr').dataset.id; const c=jget(); const list=c.academy||[];
+      const idx=list.findIndex(x=>x.id===id); if(idx<0) return;
+      if(btn.dataset.act==='del'){ list.splice(idx,1); jset({academy:list}); renderAcademy(list); }
+      if(btn.dataset.act==='edit'){
+        const cur=list[idx]; const nt=prompt('عنوان الفيديو', cur.title||''); if(nt===null) return;
+        if(cur.type==='youtube'){ const nl=prompt('رابط يوتيوب', cur.url||''); if(nl===null) return; list[idx]={...cur,title:nt,url:nl}; }
+        else{ alert('لتغيير ملف الفيديو احذفه ثم أضفه من جديد.'); list[idx]={...cur,title:nt}; }
+        jset({academy:list}); renderAcademy(list);
+      }
+    };
+  </script>
+</body>
+</html>
